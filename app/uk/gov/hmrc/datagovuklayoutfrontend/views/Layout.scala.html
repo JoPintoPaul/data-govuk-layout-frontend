@@ -15,18 +15,60 @@
  *@
 
 @import uk.gov.hmrc.datagovuklayoutfrontend.config.AppConfig
-@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcStandardPage
-@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.HmrcStandardPageParams
+@import uk.gov.hmrc.govukfrontend.views.html.components.GovukLayout
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcStandardHeader
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcScripts
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcHead
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcStandardFooter
+@import uk.gov.hmrc.govukfrontend.views.html.components.GovukServiceNavigation
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.servicenavigation._
+@import uk.gov.hmrc.govukfrontend.views.Aliases.Text
+@import uk.gov.hmrc.datagovuklayoutfrontend.views.html.HmrcStandardHeaderWithNavigation
+@import uk.gov.hmrc.govukfrontend.views.Aliases.Header
+@import uk.gov.hmrc.datagovuklayoutfrontend.views.html.ServiceNavigationPageLayout
 
 @this(
         appConfig: AppConfig,
-        hmrcStandardPage: HmrcStandardPage
+        govukLayout: GovukLayout,
+        hmrcScripts: HmrcScripts,
+        hmrcHead: HmrcHead,
+        hmrcStandardFooter: HmrcStandardFooter,
+        govukServiceNavigation: GovukServiceNavigation,
+        hmrcStandardHeader: HmrcStandardHeaderWithNavigation,
+        serviceNavigationPageLayout: ServiceNavigationPageLayout
 )
 @(pageTitle: Option[String] = None)(contentBlock: Html)(implicit request: RequestHeader, messages: Messages)
 
-@hmrcStandardPage(
-  HmrcStandardPageParams(
+
+@hmrcStandardHeaderFullWidthBorder = {
+    @hmrcStandardHeader(
+        useServiceNavigation = true
+    )
+}
+
+@navigation = {
+    @govukServiceNavigation(ServiceNavigation(
+        serviceName = Some(messages("service.name")),
+        navigation = Seq(
+            ServiceNavigationItem(
+                content = Text("Where To Buy"),
+                href = "#"
+            ),
+            ServiceNavigationItem(
+                content = Text("How To Eat"),
+                href = "#",
+                active = true
+            )
+        )
+    ))
+}
+
+@govukLayout(
     pageTitle = pageTitle,
-    isWelshTranslationAvailable = appConfig.welshLanguageSupportEnabled
-  )
+    headBlock = Some(hmrcHead()),
+    headerBlock = Some(hmrcStandardHeaderFullWidthBorder),
+    scriptsBlock = Some(hmrcScripts()),
+    footerBlock = Some(hmrcStandardFooter()),
+    beforeContentBlock = Some(navigation),
+    pageLayout = Some(serviceNavigationPageLayout(_))
 )(contentBlock)
