@@ -14,14 +14,18 @@
  * limitations under the License.
  *@
 
-@this(layout: LayoutWithGovuk)
-@()(implicit request: Request[_], messages: Messages)
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.pagelayout.PageLayout
 
-@layout(pageTitle = Some("data-govuk-layout-frontend")) {
-    <h1 class="govuk-heading-xl">@{messages("service.name")}</h1>
-    <p class="govuk-body">@{messages("service.text")}</p>
-}
+@this()
 
-@{
-    //$COVERAGE-OFF$
-}
+@(params: PageLayout)
+
+@import params._
+
+@beforeContentBlock
+
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper @mainClasses" id="main-content" @mainLang.filter(_.nonEmpty).map {mainLang => lang="@mainLang"}>
+    @contentBlock
+    </main>
+</div>
